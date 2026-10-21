@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeerTeach AI — Learn it. Teach it.</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="nav wrap">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-icon">✦</span> PeerTeach <span class="brand-ai">AI</span></a>
+    <div class="nav-links"><a href="#how-it-works">How it works</a><a href="{{ url_for('progress') }}">Progress</a></div>
+  </nav>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> YOUR PERSONAL AI TEACHING PARTNER</div>
+        <h1>Learn a tough topic.<br><span>Teach it with confidence.</span></h1>
+        <p>Enter any topic you're finding difficult. Get a student-friendly explanation, a mini lesson, slide content, a handout and a quiz — all in one place.</p>
+        <div class="hero-points"><span>✓ Any topic</span><span>✓ Your level</span><span>✓ Classroom-ready kit</span></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="art-card card-main"><div class="art-spark">✦</div><strong>Understand</strong><small>Break it down simply</small><div class="fake-lines"><i></i><i></i><i></i></div></div>
+        <div class="art-card card-float"><span class="mini-icon">✓</span><div><strong>Ready to teach</strong><small>Lesson + quiz</small></div></div>
+        <div class="art-bubble">💡</div>
+      </div>
+    </section>
+
+    <section class="builder" id="builder">
+      <div class="section-kicker">START LEARNING</div>
+      <h2>What topic do you want to understand?</h2>
+      <p class="muted">There are no fixed topics. Tell us what you need help with.</p>
+
+      {% if error_message %}<div class="alert error">{{ error_message }}</div>{% endif %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}
+      {% endwith %}
+
+      <form action="{{ url_for('generate') }}" method="post" class="topic-form" id="topicForm">
+        <label for="topic">Your topic</label>
+        <textarea id="topic" name="topic" maxlength="180" required placeholder="e.g. Binary Search Tree, Python loops, photosynthesis, fractions...">{{ previous_topic or '' }}</textarea>
+        <div class="form-row">
+          <div class="field">
+            <label for="level">Learning level</label>
+            <select name="level" id="level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+          </div>
+          <div class="field">
+            <label for="language">Explanation language</label>
+            <select name="language" id="language"><option>Simple English</option><option>Tamil and English</option><option>Tamil</option></select>
+          </div>
+        </div>
+        <label for="student_label">Student name or nickname <span class="optional">(optional)</span></label>
+        <input id="student_label" name="student_label" maxlength="60" placeholder="e.g. Student 01">
+        <button class="button primary full" type="submit" id="generateBtn"><span>✦</span> Generate my teaching kit <span>→</span></button>
+        <p class="privacy-note">Please don't enter passwords, private details or sensitive personal information.</p>
+      </form>
+      <div class="examples"><span>TRY:</span><button type="button" class="chip" data-topic="Binary Search Tree">Binary Search Tree</button><button type="button" class="chip" data-topic="Python loops">Python loops</button><button type="button" class="chip" data-topic="OSI Model">OSI Model</button><button type="button" class="chip" data-topic="Photosynthesis">Photosynthesis</button></div>
+    </section>
+
+    <section class="features" id="how-it-works">
+      <div class="section-kicker">YOUR KIT, IN ONE PLACE</div><h2>From confused to classroom-ready</h2>
+      <div class="feature-grid">
+        <article class="feature"><div class="feature-icon lilac">✧</div><h3>Understand the basics</h3><p>A simple explanation tailored to your level, with practical examples.</p></article>
+        <article class="feature"><div class="feature-icon peach">▤</div><h3>Plan a 10-minute lesson</h3><p>Clear steps, six slide outlines, a handout and a classroom activity.</p></article>
+        <article class="feature"><div class="feature-icon mint">✓</div><h3>Check understanding</h3><p>Take a five-question quiz, review explanations and record your score.</p></article>
+        <article class="feature"><div class="feature-icon blue">⌕</div><h3>Verify before teaching</h3><p>Review claims and correct mistakes rather than trusting AI blindly.</p></article>
+      </div>
+    </section>
+
+    <footer><a class="brand" href="{{ url_for('index') }}">✦ PeerTeach AI</a><span>Learn together. Teach with confidence.</span></footer>
+  </main>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

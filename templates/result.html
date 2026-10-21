@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ kit.topic }} — PeerTeach AI</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+<nav class="nav wrap"><a class="brand" href="{{ url_for('index') }}"><span class="brand-icon">✦</span> PeerTeach <span class="brand-ai">AI</span></a><div class="nav-links"><a href="{{ url_for('progress') }}">Progress</a><a href="{{ url_for('reset') }}">New topic</a></div></nav>
+<main class="wrap result-wrap">
+  <div class="result-header"><div><div class="eyebrow">YOUR CUSTOM TEACHING KIT</div><h1>{{ kit.topic }}</h1><p class="muted">{{ kit.level }} · {{ kit.language }}{% if student_label %} · Prepared for {{ student_label }}{% endif %}</p></div><a class="button secondary" href="{{ url_for('download_handout') }}">↓ Download handout</a></div>
+  <div class="notice"><strong>Responsible AI reminder:</strong> This is an AI-generated draft. Check facts, examples and any changing information before teaching it.</div>
+  <section class="content-card"><div class="card-heading"><span class="number-icon">01</span><div><h2>Understand the topic</h2><p>Start with the big idea</p></div></div><p class="body-copy">{{ kit.simple_explanation }}</p></section>
+  <section class="content-card"><div class="card-heading"><span class="number-icon">02</span><div><h2>Common misconceptions</h2><p>What learners often get wrong</p></div></div>
+    <div class="misconception-list">{% for item in kit.misconceptions %}<article class="misconception"><div class="mistake-label">COMMON MISCONCEPTION</div><p>{{ item.misconception }}</p><div class="correction"><strong>Correction</strong><p>{{ item.correction }}</p></div></article>{% endfor %}</div>
+  </section>
+  <section class="content-card"><div class="card-heading"><span class="number-icon">03</span><div><h2>Your 10-minute lesson plan</h2><p>Use this to teach your classmates</p></div></div>
+    <div class="lesson-list">{% for step in kit.lesson_plan %}<div class="lesson-step"><span class="time-pill">{{ step.time }}</span><div><h3>{{ step.activity }}</h3><p>{{ step.teacher_says }}</p></div></div>{% endfor %}</div>
+  </section>
+  <section class="content-card"><div class="card-heading"><span class="number-icon">04</span><div><h2>Six-slide presentation outline</h2><p>Copy the content into Gamma or Canva</p></div></div>
+    <div class="slide-grid">{% for slide in kit.slides %}<article class="slide"><div class="slide-top"><span>SLIDE {{ loop.index }}</span><span>✦</span></div><h3>{{ slide.title }}</h3><ul>{% for bullet in slide.bullets %}<li>{{ bullet }}</li>{% endfor %}</ul></article>{% endfor %}</div>
+  </section>
+  <section class="content-card"><div class="card-heading"><span class="number-icon">05</span><div><h2>One-page handout</h2><p>A quick revision sheet</p></div></div><div class="handout">{{ kit.handout }}</div></section>
+  <section class="content-card"><div class="card-heading"><span class="number-icon">06</span><div><h2>Fact-checking checklist</h2><p>Complete these checks before the class</p></div></div>
+    <ul class="verify-list">{% for item in kit.verification_checklist %}<li><span class="check-square">□</span>{{ item }}</li>{% endfor %}</ul><p class="muted small">Record the source you checked and any correction in your verification report. This app does not claim these items have already been independently verified.</p>
+  </section>
+  <section class="content-card"><div class="card-heading"><span class="number-icon">07</span><div><h2>Teacher tips</h2><p>Make the lesson interactive</p></div></div><ul class="verify-list">{% for tip in kit.teacher_tips %}<li><span class="check-square">✦</span>{{ tip }}</li>{% endfor %}</ul><p class="muted small"><strong>Prompt strategy:</strong> {{ kit.prompt_used }}</p></section>
+  <section class="content-card quiz-card"><div class="card-heading"><span class="number-icon">08</span><div><h2>Five-question exit quiz</h2><p>Record a pre-lesson or post-lesson score</p></div></div>
+    <form method="post" action="{{ url_for('submit_quiz') }}" id="quizForm">
+      <div class="assessment-choice"><label for="assessment_type">Assessment stage</label><select name="assessment_type" id="assessment_type"><option value="pre">Before lesson (pre-test)</option><option value="post" selected>After lesson (post-test)</option></select></div>
+      {% for q in kit.quiz %}<fieldset class="question"><legend><span>Q{{ loop.index }}</span> {{ q.question }}</legend>{% for option in q.options %}<label class="option"><input type="radio" name="q{{ loop.parent.index0 if false else loop.index0 }}" value="{{ loop.index0 }}" required> {{ option }}</label>{% endfor %}</fieldset>{% endfor %}
+      <button class="button primary full" type="submit">Submit quiz and see score →</button>
+    </form>
+  </section>
+  <div class="bottom-actions"><a class="button secondary" href="{{ url_for('progress') }}">View recorded scores</a><a class="button primary" href="{{ url_for('reset') }}">Create another kit →</a></div>
+  <footer><a class="brand" href="{{ url_for('index') }}">✦ PeerTeach AI</a><span>AI can make mistakes. Verify before teaching.</span></footer>
+</main>
+<script>
+document.querySelectorAll('.question').forEach((fieldset, qIndex) => {
+  fieldset.querySelectorAll('input[type="radio"]').forEach((input, optionIndex) => {
+    input.name = 'q' + qIndex;
+    input.value = optionIndex;
+  });
+});
+</script>
+</body></html>

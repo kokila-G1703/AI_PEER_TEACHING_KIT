@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Quiz results — PeerTeach AI</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><nav class="nav wrap"><a class="brand" href="{{ url_for('index') }}">✦ PeerTeach <span class="brand-ai">AI</span></a><div class="nav-links"><a href="{{ url_for('progress') }}">Progress</a></div></nav>
+<main class="wrap result-wrap">
+  <section class="score-hero"><div class="eyebrow">QUIZ COMPLETE</div><h1>{{ 'Pre-test' if assessment_type == 'pre' else 'Post-test' }} results</h1><div class="score-number">{{ score }}<span>/{{ total }}</span></div><p>{{ 'Good baseline! Learn the topic and take the post-test to compare.' if assessment_type == 'pre' else ('Great work — review any missed answers below.' if score >= 4 else 'Keep learning. Review the explanations and try again after revising.') }}</p><div class="score-track"><span style="width: {{ (score / total * 100)|int }}%"></span></div></section>
+  <section class="content-card"><div class="card-heading"><span class="number-icon">✓</span><div><h2>Answer review</h2><p>{{ kit.topic }}</p></div></div>
+    {% for answer in answers %}<article class="answer-review"><div class="answer-status {{ 'correct' if answer.is_correct else 'incorrect' }}">{{ 'Correct' if answer.is_correct else 'Review this answer' }}</div><h3>{{ loop.index }}. {{ answer.question }}</h3><p>{{ answer.explanation }}</p></article>{% endfor %}
+  </section>
+  <div class="bottom-actions"><a class="button secondary" href="{{ url_for('progress') }}">View score history</a><a class="button primary" href="{{ url_for('reset') }}">New topic →</a></div>
+  <p class="muted small">For a fair before/after comparison, administer the same quiz before and after the lesson and record both scores for the same student label. This prototype records each attempt but does not assume that two attempts belong to the same person unless you use the same label.</p>
+  <footer><a class="brand" href="{{ url_for('index') }}">✦ PeerTeach AI</a><span>Learn together. Teach with confidence.</span></footer>
+</main></body></html>
